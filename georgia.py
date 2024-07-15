@@ -2,6 +2,7 @@ import pygame
 import sys
 from settings import Settings
 from player import Player
+from goat import Goat, Dog, Cat
 
 class georgia:
     def __init__(self):
@@ -11,13 +12,18 @@ class georgia:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_length = self.screen.get_rect().height
         pygame.display.set_caption("Georgia Simulator")
-
         self.player = Player(self)
-
+        self.goat = Goat(self)
+        self.dog = Dog(self)
+        self.cat = Cat(self)
+        
     def run_game(self):
         while True:
             self._check_events()
             self.player.update()
+            self.goat.update()
+            self.dog.update()
+            self.cat.update()
             self._update_screen()
 
     def _check_events(self):
@@ -54,6 +60,9 @@ class georgia:
     def _update_screen(self):
         self.screen.blit(self.settings.bg_image, (0,0))
         self.player.blitme()
+        self.goat.blitme()
+        self.dog.blitme()
+        self.cat.blitme()
         pygame.display.flip()
 
 if __name__ == "__main__":
