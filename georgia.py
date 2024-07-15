@@ -3,10 +3,11 @@ import sys
 from settings import Settings
 from player import Player
 from goat import Goat, Dog, Cat
-
+from music import Music
 class georgia:
     def __init__(self):
         pygame.init()
+        pygame.mixer.init()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((self.settings.screen_width,self.settings.screen_length))
         self.settings.screen_width = self.screen.get_rect().width
@@ -16,7 +17,9 @@ class georgia:
         self.goat = Goat(self)
         self.dog = Dog(self)
         self.cat = Cat(self)
+        self.music = Music(self)
         
+        self.music.play_audio()
     def run_game(self):
         while True:
             self._check_events()

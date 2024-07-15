@@ -11,3 +11,5 @@ class Settings:
         self.goat_speed = 0.5
         self.dog_speed = 0.7
         self.cat_speed = 1
+
+        music_volume = 0.5
