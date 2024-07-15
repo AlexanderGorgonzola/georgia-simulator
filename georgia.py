@@ -4,6 +4,7 @@ from settings import Settings
 from player import Player
 from goat import Goat, Dog, Cat
 from music import Music
+from text import Text
 class georgia:
     def __init__(self):
         pygame.init()
@@ -17,16 +18,18 @@ class georgia:
         self.goat = Goat(self)
         self.dog = Dog(self)
         self.cat = Cat(self)
+        self.text = Text(self)
         self.music = Music(self)
-        
+
+        self.goat_audio = pygame.mixer.Sound("sounds/goat_scream.mp3")
+        self.dog_audio = pygame.mixer.Sound("sounds/dog_bark.mp3")
+        self.cat_audio = pygame.mixer.Sound("sounds/cat sound.mp3")
         self.music.play_audio()
     def run_game(self):
         while True:
             self._check_events()
+            self._update_animals()
             self.player.update()
-            self.goat.update()
-            self.dog.update()
-            self.cat.update()
             self._update_screen()
 
     def _check_events(self):
@@ -59,6 +62,30 @@ class georgia:
             self.player.moving_up = False
         elif event.key == pygame.K_DOWN:
             self.player.moving_down = False
+    
+    def _update_animals(self):
+        self.goat.update()
+        self.dog.update()
+        self.cat.update()
+        goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
+        dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
+        cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
+        if goat_thing:
+            self._player_hit_goat()
+        if dog_thing:
+            self._player_hit_dog()
+        if cat_thing:
+            self._player_hit_cat()
+
+    def _player_hit_goat(self):
+        self.text.goat()
+        self.goat_audio.play()
+    def _player_hit_dog(self):
+        self.text.dog()
+        self.dog_audio.play()
+    def _player_hit_cat(self):
+        self.cat_audio.play()
+        self.text.cat()
 
     def _update_screen(self):
         self.screen.blit(self.settings.bg_image, (0,0))
@@ -66,6 +93,7 @@ class georgia:
         self.goat.blitme()
         self.dog.blitme()
         self.cat.blitme()
+        self.text.draw_text()
         pygame.display.flip()
 
 if __name__ == "__main__":
