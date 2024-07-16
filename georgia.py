@@ -21,7 +21,8 @@ class georgia:
         self.text = Text(self)
         self.music = Music(self)
 
-        self.current_screen = 1
+        self.current_screen = "start"
+        self.hit = False
         self.goat_audio = pygame.mixer.Sound("sounds/goat_scream.mp3")
         self.dog_audio = pygame.mixer.Sound("sounds/dog_bark.mp3")
         self.cat_audio = pygame.mixer.Sound("sounds/cat sound.mp3")
@@ -29,8 +30,9 @@ class georgia:
     def run_game(self):
         while True:
             self._check_events()
-            self._update_animals()
-            self.player.update()
+            if not self.hit:
+                self._update_animals()
+                self.player.update()
             self._update_screen()
 
     def _check_events(self):
@@ -55,6 +57,12 @@ class georgia:
             self.player.moving_down = True
         elif event.key == pygame.K_UP:
             self.player.moving_up = True
+        elif event.key == pygame.K_SPACE:
+            if self.hit:
+                self.hit = False
+                self.text.empty()
+            else:
+                self._check_animals("space")
 
     def check_keyup(self, event):
         if event.key == pygame.K_RIGHT:
@@ -67,19 +75,25 @@ class georgia:
             self.player.moving_down = False
     
     def _update_animals(self):
-        if self.current_screen == 1:
+        if self.current_screen == "start":
             self.goat.update()
             self.dog.update()
             self.cat.update()
-            goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
-            dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
-            cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
+
+    def _check_animals(self, event):
+        goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
+        dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
+        cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
+        if self.current_screen == "start" and event == "space":
             if goat_thing:
                 self._player_hit_goat()
+                self.hit = True
             if dog_thing:
                 self._player_hit_dog()
+                self.hit = True
             if cat_thing:
                 self._player_hit_cat()
+                self.hit = True
 
     def _player_hit_goat(self):
         self.text.goat()
@@ -92,21 +106,26 @@ class georgia:
         self.text.cat()
 
     def check_edge(self):
-        if self.current_screen == 1 and self.player.rect.right >= 1210:
-            self.current_screen = 2
+        if self.current_screen == "start" and self.player.rect.right >= 1210:
+            self.current_screen = "house"
             self.player.x = 600
             self.player.y = 400
-        if self.current_screen == 2 and self.player.rect.left <= -10:
-            self.current_screen = 1
+        if self.current_screen == "house" and self.player.rect.left <= -10:
+            self.current_screen = "start"
             self.player.x = 600
             self.player.y = 400
     def _update_screen(self):
-        self.screen.blit(self.settings.bg_image, (0,0))
-        self.player.blitme()
-        if self.current_screen == 1:
+        if self.current_screen == "start":
+            self.screen.blit(self.settings.main_image, (0,0))
+        elif self.current_screen == "house":
+            self.screen.blit(self.settings.house_image, (0,0))
+
+        if self.current_screen == "start":
             self.goat.blitme()
             self.dog.blitme()
             self.cat.blitme()
+        self.player.blitme()
+        self.text.head(self.current_screen)
         self.text.draw_text()
         pygame.display.flip()
 

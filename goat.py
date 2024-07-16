@@ -14,7 +14,7 @@ class Goat(Sprite):
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
         self.rect.midbottom = self.screen_rect.midbottom
-        self.rect.bottom = self.screen_rect.bottom - 30
+        self.rect.bottom = self.screen_rect.bottom - 60
         self.speed = self.settings.goat_speed
 
     def update(self):
@@ -43,7 +43,7 @@ class Dog(Sprite):
         self.x = float(self.rect.x)
         self.y = float(self.rect.y)
         self.rect.midbottom = self.screen_rect.midtop
-        self.rect.top = self.screen_rect.top + 50
+        self.rect.top = self.screen_rect.top + 70
         self.speed = self.settings.dog_speed
 
     def update(self):
