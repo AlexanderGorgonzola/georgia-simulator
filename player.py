@@ -19,9 +19,9 @@ class Player(Sprite):
         self.moving_up = False
         self.moving_down = False
     def update(self):
-        if self.moving_right and self.rect.right < self.screen_rect.right:
+        if self.moving_right and self.rect.right < self.screen_rect.right + 20:
             self.x += self.settings.player_speed
-        if self.moving_left and self.rect.left > 0:
+        if self.moving_left and self.rect.left > -20:
             self.x -= self.settings.player_speed
         if self.moving_up and self.rect.top > 0:
             self.y -= self.settings.player_speed

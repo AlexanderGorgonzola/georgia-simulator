@@ -21,6 +21,7 @@ class georgia:
         self.text = Text(self)
         self.music = Music(self)
 
+        self.current_screen = 1
         self.goat_audio = pygame.mixer.Sound("sounds/goat_scream.mp3")
         self.dog_audio = pygame.mixer.Sound("sounds/dog_bark.mp3")
         self.cat_audio = pygame.mixer.Sound("sounds/cat sound.mp3")
@@ -46,8 +47,10 @@ class georgia:
             sys.exit()
         elif event.key == pygame.K_RIGHT:
             self.player.moving_right = True
+            self.check_edge()
         elif event.key == pygame.K_LEFT:
             self.player.moving_left = True
+            self.check_edge()
         elif event.key == pygame.K_DOWN:
             self.player.moving_down = True
         elif event.key == pygame.K_UP:
@@ -64,18 +67,19 @@ class georgia:
             self.player.moving_down = False
     
     def _update_animals(self):
-        self.goat.update()
-        self.dog.update()
-        self.cat.update()
-        goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
-        dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
-        cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
-        if goat_thing:
-            self._player_hit_goat()
-        if dog_thing:
-            self._player_hit_dog()
-        if cat_thing:
-            self._player_hit_cat()
+        if self.current_screen == 1:
+            self.goat.update()
+            self.dog.update()
+            self.cat.update()
+            goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
+            dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
+            cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
+            if goat_thing:
+                self._player_hit_goat()
+            if dog_thing:
+                self._player_hit_dog()
+            if cat_thing:
+                self._player_hit_cat()
 
     def _player_hit_goat(self):
         self.text.goat()
@@ -87,12 +91,22 @@ class georgia:
         self.cat_audio.play()
         self.text.cat()
 
+    def check_edge(self):
+        if self.current_screen == 1 and self.player.rect.right >= 1210:
+            self.current_screen = 2
+            self.player.x = 600
+            self.player.y = 400
+        if self.current_screen == 2 and self.player.rect.left <= -10:
+            self.current_screen = 1
+            self.player.x = 600
+            self.player.y = 400
     def _update_screen(self):
         self.screen.blit(self.settings.bg_image, (0,0))
         self.player.blitme()
-        self.goat.blitme()
-        self.dog.blitme()
-        self.cat.blitme()
+        if self.current_screen == 1:
+            self.goat.blitme()
+            self.dog.blitme()
+            self.cat.blitme()
         self.text.draw_text()
         pygame.display.flip()
 
