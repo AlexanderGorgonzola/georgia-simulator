@@ -2,7 +2,7 @@ import pygame
 import sys
 from settings import Settings
 from player import Player
-from goat import Goat, Dog, Cat, Chicken, Babu
+from goat import Goat, Dog, Cat, Chicken, Babu, Gojo
 from music import Music
 from text import Text
 from buttons import Buttons, Effect
@@ -21,6 +21,7 @@ class georgia:
         self.cat = Cat(self)
         self.chicken = Chicken(self)
         self.babu = Babu(self)
+        self.gojo = Gojo(self)
         self.text = Text(self)
         self.music = Music(self)
         self.button = Buttons(self)
@@ -30,6 +31,7 @@ class georgia:
         self.hit = False
         self.task = False
         self.items = False
+        self.chicken_gone = False
         self.babu_talk = 0
         self.turn = ""
         self.tasks_left = []
@@ -135,10 +137,11 @@ class georgia:
                 self.hit = True
                 self.turn = "cat"
         if self.current_screen == "house" and event == "space":
-            if chicken_thing:
-                self._player_hit_chicken()
-                self.hit = True
-                self.turn = "chicken"
+            if not self.chicken_gone:
+                if chicken_thing:
+                    self._player_hit_chicken()
+                    self.hit = True
+                    self.turn = "chicken"
             if babu_thing:
                 self._player_hit_babu()
                 self.hit = True
@@ -154,13 +157,22 @@ class georgia:
         self.cat_audio.play()
         self.text.cat()
     def _player_hit_chicken(self):
-        self.chicken_audio.play()
         self.text.chicken()
+        if self.babu_talk == 1:
+            self.babu_talk = 2
+            del self.tasks_left[0]
+            del self.items_left[0]
+            self.chicken_gone = True
+            self.text.task_1("NONE")
+            self.text.item_1("NONE")
+        self.chicken_audio.play()
     def _player_hit_babu(self):
         if self.babu_talk == 0:
             self.text.babu(0)
-        if self.babu_talk == 1:
+        elif self.babu_talk == 1:
             self.text.babu(1)
+        elif self.babu_talk == 2:
+            self.text.babu(2)
 
     def check_edge(self):
         if self.current_screen == "start" and self.player.rect.right >= 1210:
@@ -171,10 +183,18 @@ class georgia:
             self.current_screen = "start"
             self.player.x = 600
             self.player.y = 400
+        if self.current_screen == "house" and self.player.rect.top <= -10:
+            self.current_screen = "house_2"
+            self.player.x = 600
+            self.player.y = 400
+        if self.current_screen == "house_2" and self.player.rect.bottom >= 810:
+            self.current_screen = "house"
+            self.player.x = 600
+            self.player.y = 400
     def _update_screen(self):
         if self.current_screen == "start":
             self.screen.blit(self.settings.main_image, (0,0))
-        elif self.current_screen == "house":
+        elif self.current_screen == "house" or self.current_screen == "house_2":
             self.screen.blit(self.settings.house_image, (0,0))
 
         if self.current_screen == "start":
@@ -182,8 +202,11 @@ class georgia:
             self.dog.blitme()
             self.cat.blitme()
         elif self.current_screen == "house":
-            self.chicken.blitme()
+            if not self.chicken_gone:
+                self.chicken.blitme()
             self.babu.blitme()
+        elif self.current_screen == "house_2":
+            self.gojo.blitme()
         self.player.blitme()
         self.text.head(self.current_screen)
         self.button.show_buttons()

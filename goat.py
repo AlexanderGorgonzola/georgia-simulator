@@ -133,3 +133,21 @@ class Babu(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+
+class Gojo(Sprite):
+    def __init__(self, georgia):
+        super().__init__()
+        self.screen = georgia.screen
+        self.screen_rect = georgia.screen.get_rect()
+        self.settings = georgia.settings
+        self.image = pygame.image.load("images/gojo.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+        self.rect.center = self.screen_rect.center
+        self.rect.top = self.screen_rect.top + 300
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)

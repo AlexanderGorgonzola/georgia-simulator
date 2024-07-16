@@ -23,9 +23,9 @@ class Player(Sprite):
             self.x += self.settings.player_speed
         if self.moving_left and self.rect.left > -20:
             self.x -= self.settings.player_speed
-        if self.moving_up and self.rect.top > 0:
+        if self.moving_up and self.rect.top > -20:
             self.y -= self.settings.player_speed
-        if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
+        if self.moving_down and self.rect.bottom < self.screen_rect.bottom + 20:
             self.y += self.settings.player_speed
         self.rect.x = self.x
         self.rect.y = self.y

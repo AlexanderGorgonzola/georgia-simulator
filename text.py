@@ -7,7 +7,7 @@ class Text:
         self.screen_rect = self.screen.get_rect()
         self.font = pygame.font.SysFont("lucidaconsole", 40)
         self.font_2 = pygame.font.SysFont("lucidaconsole", 55)
-        self.font_3 = pygame.font.SysFont("lucidaconsole", 35)
+        self.font_3 = pygame.font.SysFont("lucidaconsole", 55)
         self.text_color = (255,255,255)
         self.text = self.font.render("", True, self.text_color)
         self.text_rect = self.text.get_rect()
@@ -36,7 +36,7 @@ class Text:
         elif talk == 1:
             self.text = self.font.render("Babu: Go feed", True, self.text_color)
         elif talk == 2:
-            self.text = self.font.render("Babu: Yippie!")
+            self.text = self.font.render("Babu: Yippie!", True, self.text_color)
 
         self.text_rect = self.text.get_rect()
         self.text_rect.midbottom = self.screen_rect.midbottom
@@ -48,19 +48,19 @@ class Text:
     def head(self, screen):
         if screen == "start":
             self.text_2 = self.font_2.render("Field", True, self.text_color)
-        elif screen == "house":
+        elif screen == "house" or screen == "house_2":
             self.text_2 = self.font_2.render("Main House", True, self.text_color)
         self.text_2_rect = self.text_2.get_rect()
         self.text_2_rect.midtop = self.screen_rect.midtop
     
     def task_1(self, message):
-        self.task_one = self.font_3.render(f"1: {message}", True, (0,0,0))
+        self.task_one = self.font_3.render(message, True, (0,0,0))
         self.task_one_rect = self.task_one.get_rect()
         self.task_one_rect.center = self.screen_rect.center
         self.task_one_rect.top = self.screen_rect.top + 150
 
     def item_1(self, message):
-        self.item_one = self.font_3.render(f"1: {message}", True, (0,0,0))
+        self.item_one = self.font_3.render(message, True, (0,0,0))
         self.item_one_rect = self.item_one.get_rect()
         self.item_one_rect.center = self.screen_rect.center
         self.item_one_rect.top = self.screen_rect.top + 150
