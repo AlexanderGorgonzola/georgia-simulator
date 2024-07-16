@@ -5,6 +5,7 @@ from player import Player
 from goat import Goat, Dog, Cat, Chicken, Babu
 from music import Music
 from text import Text
+from buttons import Buttons, Effect
 class georgia:
     def __init__(self):
         pygame.init()
@@ -22,9 +23,17 @@ class georgia:
         self.babu = Babu(self)
         self.text = Text(self)
         self.music = Music(self)
+        self.button = Buttons(self)
+        self.effect = Effect(self)
 
         self.current_screen = "start"
         self.hit = False
+        self.task = False
+        self.items = False
+        self.babu_talk = 0
+        self.turn = ""
+        self.tasks_left = []
+        self.items_left = []
         self.goat_audio = pygame.mixer.Sound("sounds/goat_scream.mp3")
         self.dog_audio = pygame.mixer.Sound("sounds/dog_bark.mp3")
         self.cat_audio = pygame.mixer.Sound("sounds/cat sound.mp3")
@@ -33,9 +42,11 @@ class georgia:
     def run_game(self):
         while True:
             self._check_events()
-            if not self.hit:
+
+            if not self.hit and not self.task and not self.items:
                 self._update_animals()
                 self.player.update()
+
             self._update_screen()
 
     def _check_events(self):
@@ -46,6 +57,9 @@ class georgia:
                 self.check_keydown(event)
             elif event.type == pygame.KEYUP:
                 self.check_keyup(event)
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                self._check_buttons(mouse_pos)
 
     def check_keydown(self, event):
         if event.key == pygame.K_q:
@@ -64,6 +78,11 @@ class georgia:
             if self.hit:
                 self.hit = False
                 self.text.empty()
+                if self.turn == "babu" and self.babu_talk == 0:
+                    self.babu_talk = 1
+                    self.tasks_left.append("feed chikin")
+                    self.items_left.append("Seed")
+                self.turn = ""
             else:
                 self._check_animals("space")
 
@@ -76,7 +95,18 @@ class georgia:
             self.player.moving_up = False
         elif event.key == pygame.K_DOWN:
             self.player.moving_down = False
-    
+    def _check_buttons(self, mouse_pos):
+        task_button = self.button.task_rect.collidepoint(mouse_pos)
+        item_button = self.button.storage_rect.collidepoint(mouse_pos)
+        if task_button and not self.task:
+            self.task = True
+        elif task_button and self.task:
+            self.task = False
+        if item_button and not self.items:
+            self.items = True
+        elif item_button and self.items:
+            self.items = False
+
     def _update_animals(self):
         if self.current_screen == "start":
             self.goat.update()
@@ -90,20 +120,29 @@ class georgia:
         dog_thing = self.dog.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         cat_thing = self.cat.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         chicken_thing = self.chicken.rect.collidepoint(self.player.rect.x, self.player.rect.y)
+        babu_thing = self.babu.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         if self.current_screen == "start" and event == "space":
             if goat_thing:
                 self._player_hit_goat()
                 self.hit = True
+                self.turn = "goat"
             if dog_thing:
                 self._player_hit_dog()
                 self.hit = True
+                self.turn = "dog"
             if cat_thing:
                 self._player_hit_cat()
                 self.hit = True
+                self.turn = "cat"
         if self.current_screen == "house" and event == "space":
             if chicken_thing:
                 self._player_hit_chicken()
                 self.hit = True
+                self.turn = "chicken"
+            if babu_thing:
+                self._player_hit_babu()
+                self.hit = True
+                self.turn = "babu"
 
     def _player_hit_goat(self):
         self.text.goat()
@@ -117,6 +156,11 @@ class georgia:
     def _player_hit_chicken(self):
         self.chicken_audio.play()
         self.text.chicken()
+    def _player_hit_babu(self):
+        if self.babu_talk == 0:
+            self.text.babu(0)
+        if self.babu_talk == 1:
+            self.text.babu(1)
 
     def check_edge(self):
         if self.current_screen == "start" and self.player.rect.right >= 1210:
@@ -142,7 +186,18 @@ class georgia:
             self.babu.blitme()
         self.player.blitme()
         self.text.head(self.current_screen)
+        self.button.show_buttons()
         self.text.draw_text()
+        if self.task:
+            self.effect.draw_effect()
+            if len(self.tasks_left) > 0:
+                self.text.task_1(self.tasks_left[0])
+            self.text.draw_tasks()
+        if self.items:
+            self.effect.draw_item()
+            if len(self.items_left) > 0:
+                self.text.item_1(self.items_left[0])
+            self.text.draw_items()
         pygame.display.flip()
 
 if __name__ == "__main__":
