@@ -25,6 +25,10 @@ class Text:
         self.text = self.font.render("You: SWIM WITH ME MAXI", True, self.text_color)
         self.text_rect = self.text.get_rect()
         self.text_rect.midbottom = self.screen_rect.midbottom
+    def chicken(self):
+        self.text = self.font.render("Chicken: (screams)", True, self.text_color)
+        self.text_rect = self.text.get_rect()
+        self.text_rect.midbottom = self.screen_rect.midbottom
 
     def empty(self):
         self.text = self.font.render("", True, self.text_color)

@@ -86,3 +86,50 @@ class Cat(Sprite):
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
+
+class Chicken(Sprite):
+    def __init__(self, georgia):
+        super().__init__()
+        self.screen = georgia.screen
+        self.screen_rect = georgia.screen.get_rect()
+        self.settings = georgia.settings
+        self.image = pygame.image.load("images/chicken.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+        self.rect.midleft = self.screen_rect.midleft
+        self.rect.right = self.screen_rect.right - 20
+        self.speed = self.settings.chicken_speed
+
+    def update(self):
+        self.y += self.speed
+        if self.y >= 750:
+            self.y = 750
+            self.speed *= -1
+        elif self.y <= 0:
+            self.y = 0
+            self.speed *= -1
+        self.rect.y = self.y
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)
+
+class Babu(Sprite):
+    def __init__(self, georgia):
+        super().__init__()
+        self.screen = georgia.screen
+        self.screen_rect = georgia.screen.get_rect()
+        self.settings = georgia.settings
+        self.image = pygame.image.load("images/babu.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = self.rect.width
+        self.rect.y = self.rect.height
+        self.x = float(self.rect.x)
+        self.y = float(self.rect.y)
+        self.rect.center = self.screen_rect.center
+        self.rect.right = self.screen_rect.right - 100
+
+    def blitme(self):
+        self.screen.blit(self.image, self.rect)

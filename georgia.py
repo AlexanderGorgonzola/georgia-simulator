@@ -2,7 +2,7 @@ import pygame
 import sys
 from settings import Settings
 from player import Player
-from goat import Goat, Dog, Cat
+from goat import Goat, Dog, Cat, Chicken, Babu
 from music import Music
 from text import Text
 class georgia:
@@ -18,6 +18,8 @@ class georgia:
         self.goat = Goat(self)
         self.dog = Dog(self)
         self.cat = Cat(self)
+        self.chicken = Chicken(self)
+        self.babu = Babu(self)
         self.text = Text(self)
         self.music = Music(self)
 
@@ -26,6 +28,7 @@ class georgia:
         self.goat_audio = pygame.mixer.Sound("sounds/goat_scream.mp3")
         self.dog_audio = pygame.mixer.Sound("sounds/dog_bark.mp3")
         self.cat_audio = pygame.mixer.Sound("sounds/cat sound.mp3")
+        self.chicken_audio = pygame.mixer.Sound("sounds/chicken_scream.mp3")
         self.music.play_audio()
     def run_game(self):
         while True:
@@ -79,11 +82,14 @@ class georgia:
             self.goat.update()
             self.dog.update()
             self.cat.update()
+        elif self.current_screen == "house":
+            self.chicken.update()
 
     def _check_animals(self, event):
-        goat_thing = self.goat.rect.collidepoint(self.player.x, self.player.y)
-        dog_thing = self.dog.rect.collidepoint(self.player.x, self.player.y)
-        cat_thing = self.cat.rect.collidepoint(self.player.x, self.player.y)
+        goat_thing = self.goat.rect.collidepoint(self.player.rect.x, self.player.rect.y)
+        dog_thing = self.dog.rect.collidepoint(self.player.rect.x, self.player.rect.y)
+        cat_thing = self.cat.rect.collidepoint(self.player.rect.x, self.player.rect.y)
+        chicken_thing = self.chicken.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         if self.current_screen == "start" and event == "space":
             if goat_thing:
                 self._player_hit_goat()
@@ -93,6 +99,10 @@ class georgia:
                 self.hit = True
             if cat_thing:
                 self._player_hit_cat()
+                self.hit = True
+        if self.current_screen == "house" and event == "space":
+            if chicken_thing:
+                self._player_hit_chicken()
                 self.hit = True
 
     def _player_hit_goat(self):
@@ -104,6 +114,9 @@ class georgia:
     def _player_hit_cat(self):
         self.cat_audio.play()
         self.text.cat()
+    def _player_hit_chicken(self):
+        self.chicken_audio.play()
+        self.text.chicken()
 
     def check_edge(self):
         if self.current_screen == "start" and self.player.rect.right >= 1210:
@@ -124,6 +137,9 @@ class georgia:
             self.goat.blitme()
             self.dog.blitme()
             self.cat.blitme()
+        elif self.current_screen == "house":
+            self.chicken.blitme()
+            self.babu.blitme()
         self.player.blitme()
         self.text.head(self.current_screen)
         self.text.draw_text()
