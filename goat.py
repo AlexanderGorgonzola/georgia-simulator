@@ -7,7 +7,7 @@ class Goat(Sprite):
         self.screen = georgia.screen
         self.screen_rect = georgia.screen.get_rect()
         self.settings = georgia.settings
-        self.image = pygame.image.load("images/goat.png")
+        self.image = pygame.image.load("images/goat.jpg")
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -36,7 +36,7 @@ class Dog(Sprite):
         self.screen = georgia.screen
         self.screen_rect = georgia.screen.get_rect()
         self.settings = georgia.settings
-        self.image = pygame.image.load("images/dog.png")
+        self.image = pygame.image.load("images/dog.jpg")
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -64,7 +64,7 @@ class Cat(Sprite):
         self.screen = georgia.screen
         self.screen_rect = georgia.screen.get_rect()
         self.settings = georgia.settings
-        self.image = pygame.image.load("images/cat.png")
+        self.image = pygame.image.load("images/cat.jpg")
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -93,7 +93,7 @@ class Chicken(Sprite):
         self.screen = georgia.screen
         self.screen_rect = georgia.screen.get_rect()
         self.settings = georgia.settings
-        self.image = pygame.image.load("images/chicken.png")
+        self.image = pygame.image.load("images/chicken.jpg")
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height
@@ -140,7 +140,7 @@ class Gojo(Sprite):
         self.screen = georgia.screen
         self.screen_rect = georgia.screen.get_rect()
         self.settings = georgia.settings
-        self.image = pygame.image.load("images/gojo.png")
+        self.image = pygame.image.load("images/gojo.jpg")
         self.rect = self.image.get_rect()
         self.rect.x = self.rect.width
         self.rect.y = self.rect.height

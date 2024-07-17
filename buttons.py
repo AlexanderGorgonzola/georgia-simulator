@@ -12,12 +12,12 @@ class Buttons:
         self.prep_storage()
 
     def prep_task(self):
-        self.task = pygame.image.load("images/task_button.png")
+        self.task = pygame.image.load("images/task_button.jpg")
         self.task_rect = self.task.get_rect()
         self.task_rect.left = self.screen_rect.left + 30
         self.task_rect.bottom = self.screen_rect.bottom - 30
     def prep_storage(self):
-        self.storage = pygame.image.load("images/storage_button.png")
+        self.storage = pygame.image.load("images/storage_button.jpg")
         self.storage_rect = self.storage.get_rect()
         self.storage_rect.left = self.screen_rect.left + 30
         self.storage_rect.bottom = self.screen_rect.bottom - 140
@@ -34,11 +34,11 @@ class Effect:
         self.prep_item()
         
     def prep_task(self):
-        self.task = pygame.image.load("images/tasks.png")
+        self.task = pygame.image.load("images/tasks.jpg")
         self.task_rect = self.task.get_rect()
         self.task_rect.center = self.screen_rect.center
     def prep_item(self):
-        self.item = pygame.image.load("images/items.png")
+        self.item = pygame.image.load("images/items.jpg")
         self.item_rect = self.item.get_rect()
         self.item_rect.center = self.screen_rect.center
     
