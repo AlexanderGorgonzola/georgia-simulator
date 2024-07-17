@@ -53,6 +53,8 @@ class Text:
             self.text_2 = self.font_2.render("Field", True, self.text_color)
         elif screen == "house" or screen == "house_2":
             self.text_2 = self.font_2.render("Main House", True, self.text_color)
+        elif screen == "parking":
+            self.text_2 = self.font_2.render("Parking", True, self.text_color)
         self.text_2_rect = self.text_2.get_rect()
         self.text_2_rect.midtop = self.screen_rect.midtop
     
@@ -88,8 +90,20 @@ class Text:
             self.leave_rect = self.leave.get_rect()
             self.leave_rect.midtop = self.screen_rect.midtop
             self.leave_rect.left = self.screen_rect.left + 100
+        elif message == "main house_2 down":
+            self.leave = self.font_2.render("v House", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midbottom = self.screen_rect.midbottom
         elif message == "field right":
             self.leave = self.font_2.render("House -->", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midright = self.screen_rect.midright
+        elif message == "field left":
+            self.leave = self.font_2.render("<-- parking", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midleft = self.screen_rect.midleft
+        elif message == "parking right":
+            self.leave = self.font_2.render("field -->", True, self.text_color)
             self.leave_rect = self.leave.get_rect()
             self.leave_rect.midright = self.screen_rect.midright
         elif message == "":

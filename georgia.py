@@ -1,7 +1,7 @@
 import pygame
 import sys
 from settings import Settings
-from player import Player
+from player import Player, Car
 from goat import Goat, Dog, Cat, Chicken, Babu, Gojo
 from music import Music
 from text import Text
@@ -26,11 +26,13 @@ class georgia:
         self.music = Music(self)
         self.button = Buttons(self)
         self.effect = Effect(self)
+        self.car = Car(self)
 
         self.current_screen = "start"
         self.hit = False
         self.task = False
         self.items = False
+        self.in_car = False
         self.chicken_gone = False
         self.babu_talk = 0
         self.turn = ""
@@ -47,7 +49,10 @@ class georgia:
 
             if not self.hit and not self.task and not self.items:
                 self._update_animals()
-                self.player.update()
+                if not self.in_car:
+                    self.player.update()
+                if self.in_car:
+                    self.car.update()
 
             self._update_screen()
 
@@ -66,37 +71,71 @@ class georgia:
     def check_keydown(self, event):
         if event.key == pygame.K_q:
             sys.exit()
-        elif event.key == pygame.K_RIGHT:
-            self.player.moving_right = True
-            self.check_edge()
-        elif event.key == pygame.K_LEFT:
-            self.player.moving_left = True
-            self.check_edge()
-        elif event.key == pygame.K_DOWN:
-            self.player.moving_down = True
-        elif event.key == pygame.K_UP:
-            self.player.moving_up = True
-        elif event.key == pygame.K_SPACE:
-            if self.hit:
-                self.hit = False
-                self.text.empty()
-                if self.turn == "babu" and self.babu_talk == 0:
-                    self.babu_talk = 1
-                    self.tasks_left.append("feed chikin")
-                    self.items_left.append("seed")
-                self.turn = ""
-            else:
-                self._check_animals("space")
+        if not self.in_car:
+            if event.key == pygame.K_RIGHT:
+                self.player.moving_right = True
+                self.check_edge()
+            elif event.key == pygame.K_LEFT:
+                self.player.moving_left = True
+                self.check_edge()
+            elif event.key == pygame.K_DOWN:
+                self.player.moving_down = True
+            elif event.key == pygame.K_UP:
+                self.player.moving_up = True
+            elif event.key == pygame.K_SPACE:
+                if self.hit:
+                    self.hit = False
+                    self.text.empty()
+                    if self.turn == "babu" and self.babu_talk == 0:
+                        self.babu_talk = 1
+                        self.tasks_left.append("feed chikin")
+                        self.items_left.append("seed")
+                    self.turn = ""
+                else:
+                    self._check_animals("space")
+                    print(self.in_car)
+        if self.in_car:
+            if event.key == pygame.K_RIGHT:
+                self.car.moving_right = True
+                self.check_edge()
+            elif event.key == pygame.K_LEFT:
+                self.car.moving_left = True
+                self.check_edge()
+            elif event.key == pygame.K_DOWN:
+                self.car.moving_down = True
+            elif event.key == pygame.K_UP:
+                self.car.moving_up = True
+            elif event.key == pygame.K_SPACE:
+                if self.hit:
+                    self.hit = False
+                    self.text.empty()
+                    if self.turn == "babu" and self.babu_talk == 0:
+                        self.babu_talk = 1
+                        self.tasks_left.append("feed chikin")
+                        self.items_left.append("seed")
+                    self.turn = ""
+                else:
+                    self._check_animals("space")
 
     def check_keyup(self, event):
-        if event.key == pygame.K_RIGHT:
-            self.player.moving_right = False
-        elif event.key == pygame.K_LEFT:
-            self.player.moving_left = False
-        elif event.key == pygame.K_UP:
-            self.player.moving_up = False
-        elif event.key == pygame.K_DOWN:
-            self.player.moving_down = False
+        if not self.in_car:
+            if event.key == pygame.K_RIGHT:
+                self.player.moving_right = False
+            elif event.key == pygame.K_LEFT:
+                self.player.moving_left = False
+            elif event.key == pygame.K_UP:
+                self.player.moving_up = False
+            elif event.key == pygame.K_DOWN:
+                self.player.moving_down = False
+        elif self.in_car:
+            if event.key == pygame.K_RIGHT:
+                self.car.moving_right = False
+            elif event.key == pygame.K_LEFT:
+                self.car.moving_left = False
+            elif event.key == pygame.K_UP:
+                self.car.moving_up = False
+            elif event.key == pygame.K_DOWN:
+                self.car.moving_down = False
     def _check_buttons(self, mouse_pos):
         task_button = self.button.task_rect.collidepoint(mouse_pos)
         item_button = self.button.storage_rect.collidepoint(mouse_pos)
@@ -123,6 +162,7 @@ class georgia:
         cat_thing = self.cat.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         chicken_thing = self.chicken.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         babu_thing = self.babu.rect.collidepoint(self.player.rect.x, self.player.rect.y)
+        car_thing = self.car.rect.collidepoint(self.player.rect.x, self.player.rect.y)
         if self.current_screen == "start" and event == "space":
             if goat_thing:
                 self._player_hit_goat()
@@ -146,6 +186,11 @@ class georgia:
                 self._player_hit_babu()
                 self.hit = True
                 self.turn = "babu"
+        if self.current_screen == "parking" and event == "space":
+            if car_thing and not self.in_car:
+                self.in_car = True
+            elif car_thing and self.in_car:
+                self.in_car = False
 
     def _player_hit_goat(self):
         self.text.goat()
@@ -183,27 +228,38 @@ class georgia:
             self.text.babu(2)
 
     def check_edge(self):
-        if self.current_screen == "start" and self.player.rect.right >= 1210:
-            self.current_screen = "house"
-            self.player.x = 600
-            self.player.y = 400
-        if self.current_screen == "house" and self.player.rect.left <= -10:
-            self.current_screen = "start"
-            self.player.x = 600
-            self.player.y = 400
-        if self.current_screen == "house" and self.player.rect.top <= -10:
-            self.current_screen = "house_2"
-            self.player.x = 600
-            self.player.y = 400
-        if self.current_screen == "house_2" and self.player.rect.bottom >= 810:
-            self.current_screen = "house"
-            self.player.x = 600
-            self.player.y = 400
+        if not self.in_car:
+            if self.current_screen == "start" and self.player.rect.right >= 1210:
+                self.current_screen = "house"
+                self.player.x = 600
+                self.player.y = 400
+            if self.current_screen == "house" and self.player.rect.left <= -10:
+                self.current_screen = "start"
+                self.player.x = 600
+                self.player.y = 400
+            if self.current_screen == "house" and self.player.rect.top <= -10:
+                self.current_screen = "house_2"
+                self.player.x = 600
+                self.player.y = 400
+            if self.current_screen == "house_2" and self.player.rect.bottom >= 810:
+                self.current_screen = "house"
+                self.player.x = 600
+                self.player.y = 400
+            if self.current_screen == "start" and self.player.rect.left <= -10:
+                self.current_screen = "parking"
+                self.player.x = 600
+                self.player.y = 400
+            if self.current_screen == "parking" and self.player.rect.right >= 1210:
+                self.current_screen = "start"
+                self.player.x = 600
+                self.player.y = 400
     def _update_screen(self):
         if self.current_screen == "start":
             self.screen.blit(self.settings.main_image, (0,0))
         elif self.current_screen == "house" or self.current_screen == "house_2":
             self.screen.blit(self.settings.house_image, (0,0))
+        elif self.current_screen == "parking":
+            self.screen.blit(self.settings.parking_image, (0,0))
 
         if self.current_screen == "start":
             self.goat.blitme()
@@ -215,7 +271,10 @@ class georgia:
             self.babu.blitme()
         elif self.current_screen == "house_2":
             self.gojo.blitme()
-        self.player.blitme()
+        if not self.in_car:
+            self.player.blitme()
+        if self.in_car or self.current_screen == "parking":
+            self.car.blitme()
         self.text.head(self.current_screen)
         self.button.show_buttons()
         self.text.draw_text()
@@ -241,6 +300,12 @@ class georgia:
             self.text.leaving("main house left")
         elif self.player.rect.top <= 100 and self.current_screen == "house":
             self.text.leaving("main house up")
+        elif self.player.rect.bottom >= 790 and self.current_screen == "house_2":
+            self.text.leaving("main house_2 down")
+        elif self.player.rect.left <= 100 and self.current_screen == "start":
+            self.text.leaving("field left")
+        elif self.player.rect.right >= 1100 and self.current_screen == "parking":
+            self.text.leaving("parking right")
         else:
             self.text.leaving("")
         self.text.draw_leaving()
