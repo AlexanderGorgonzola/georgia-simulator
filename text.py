@@ -11,8 +11,10 @@ class Text:
         self.text_color = (255,255,255)
         self.text = self.font.render("", True, self.text_color)
         self.text_rect = self.text.get_rect()
-        self.task_1("HI")
-        self.item_1("LOSER")
+        self.task_1("NONE")
+        self.task_2("NONE")
+        self.item_1("NONE")
+        self.item_2("NONE")
 
     def goat(self):
         self.text = self.font.render("You: STUPID GOAT", True, self.text_color)
@@ -54,21 +56,33 @@ class Text:
         self.text_2_rect.midtop = self.screen_rect.midtop
     
     def task_1(self, message):
-        self.task_one = self.font_3.render(message, True, (0,0,0))
+        self.task_one = self.font_3.render(f"1: {message}", True, (0,0,0))
         self.task_one_rect = self.task_one.get_rect()
         self.task_one_rect.center = self.screen_rect.center
         self.task_one_rect.top = self.screen_rect.top + 150
+    def task_2(self, message):
+        self.task_two = self.font_3.render(f"2: {message}", True, (0,0,0))
+        self.task_two_rect = self.task_one.get_rect()
+        self.task_two_rect.center = self.screen_rect.center
+        self.task_two_rect.top = self.screen_rect.top + 200
 
     def item_1(self, message):
-        self.item_one = self.font_3.render(message, True, (0,0,0))
+        self.item_one = self.font_3.render(f"1: {message}", True, (0,0,0))
         self.item_one_rect = self.item_one.get_rect()
         self.item_one_rect.center = self.screen_rect.center
         self.item_one_rect.top = self.screen_rect.top + 150
+    def item_2(self, message):
+        self.item_two = self.font_3.render(f"2: {message}", True, (0,0,0))
+        self.item_two_rect = self.item_one.get_rect()
+        self.item_two_rect.center = self.screen_rect.center
+        self.item_two_rect.top = self.screen_rect.top + 200
 
     def draw_text(self):
         self.screen.blit(self.text, self.text_rect)
         self.screen.blit(self.text_2, self.text_2_rect)
     def draw_tasks(self):
         self.screen.blit(self.task_one, self.task_one_rect)
+        self.screen.blit(self.task_two, self.task_two_rect)
     def draw_items(self):
         self.screen.blit(self.item_one, self.item_one_rect)
+        self.screen.blit(self.item_two, self.item_two_rect)

@@ -83,7 +83,7 @@ class georgia:
                 if self.turn == "babu" and self.babu_talk == 0:
                     self.babu_talk = 1
                     self.tasks_left.append("feed chikin")
-                    self.items_left.append("Seed")
+                    self.items_left.append("seed")
                 self.turn = ""
             else:
                 self._check_animals("space")
@@ -160,11 +160,19 @@ class georgia:
         self.text.chicken()
         if self.babu_talk == 1:
             self.babu_talk = 2
-            del self.tasks_left[0]
-            del self.items_left[0]
+            if self.tasks_left.index("feed chikin") == 0:
+                self.text.task_1("NONE")
+            elif self.tasks_left.index("feed chikin") == 1:
+                self.text.task_2("NONE")
+
+            if self.items_left.index("seed") == 0:
+                self.text.item_1("NONE")
+            elif self.items_left.index("seed") == 1:
+                self.text.item_2("NONE")
+                
+            del self.tasks_left[self.tasks_left.index("feed chikin")]
+            del self.items_left[self.items_left.index("seed")]
             self.chicken_gone = True
-            self.text.task_1("NONE")
-            self.text.item_1("NONE")
         self.chicken_audio.play()
     def _player_hit_babu(self):
         if self.babu_talk == 0:
@@ -214,12 +222,18 @@ class georgia:
         if self.task:
             self.effect.draw_effect()
             if len(self.tasks_left) > 0:
-                self.text.task_1(self.tasks_left[0])
+                if self.tasks_left.index("feed chikin") == 0:
+                    self.text.task_1(self.tasks_left[0])
+                if self.tasks_left.index("feed chikin") == 1:
+                    self.text.task_2(self.tasks_left[0])
             self.text.draw_tasks()
         if self.items:
             self.effect.draw_item()
             if len(self.items_left) > 0:
-                self.text.item_1(self.items_left[0])
+                if self.items_left.index("seed") == 0:
+                    self.text.item_1(self.items_left[0])
+                if self.items_left.index("seed") == 1:
+                    self.text.item_2(self.items_left[0])
             self.text.draw_items()
         pygame.display.flip()
 
