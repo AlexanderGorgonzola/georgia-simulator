@@ -235,6 +235,15 @@ class georgia:
                 if self.items_left.index("seed") == 1:
                     self.text.item_2(self.items_left[0])
             self.text.draw_items()
+        if self.player.rect.right >= 1100 and self.current_screen == "start":
+            self.text.leaving("field right")
+        elif self.player.rect.left <= 100 and self.current_screen == "house":
+            self.text.leaving("main house left")
+        elif self.player.rect.top <= 100 and self.current_screen == "house":
+            self.text.leaving("main house up")
+        else:
+            self.text.leaving("")
+        self.text.draw_leaving()
         pygame.display.flip()
 
 if __name__ == "__main__":

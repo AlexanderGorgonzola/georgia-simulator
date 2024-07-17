@@ -15,6 +15,7 @@ class Text:
         self.task_2("NONE")
         self.item_1("NONE")
         self.item_2("NONE")
+        self.leaving("")
 
     def goat(self):
         self.text = self.font.render("You: STUPID GOAT", True, self.text_color)
@@ -77,6 +78,26 @@ class Text:
         self.item_two_rect.center = self.screen_rect.center
         self.item_two_rect.top = self.screen_rect.top + 200
 
+    def leaving(self, message):
+        if message == "main house left":
+            self.leave = self.font_2.render("<-- Field", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midleft = self.screen_rect.midleft
+        elif message == "main house up":
+            self.leave = self.font_2.render("^ House", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midtop = self.screen_rect.midtop
+            self.leave_rect.left = self.screen_rect.left + 100
+        elif message == "field right":
+            self.leave = self.font_2.render("House -->", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            self.leave_rect.midright = self.screen_rect.midright
+        elif message == "":
+            self.leave = self.font_2.render("", True, self.text_color)
+            self.leave_rect = self.leave.get_rect()
+            
+        
+
     def draw_text(self):
         self.screen.blit(self.text, self.text_rect)
         self.screen.blit(self.text_2, self.text_2_rect)
@@ -86,3 +107,5 @@ class Text:
     def draw_items(self):
         self.screen.blit(self.item_one, self.item_one_rect)
         self.screen.blit(self.item_two, self.item_two_rect)
+    def draw_leaving(self):
+        self.screen.blit(self.leave, self.leave_rect)
