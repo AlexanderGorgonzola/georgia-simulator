@@ -17,8 +17,13 @@ class Text:
         self.item_2("NONE")
         self.leaving("")
 
-    def goat(self):
-        self.text = self.font.render("You: STUPID GOAT", True, self.text_color)
+    def goat(self, turn):
+        if turn == 0:
+            self.text = self.font.render("You: NO CHEESE FOR YOU", True, self.text_color)
+        elif turn == 1:
+            self.text = self.font.render("You: CHEESE FOR YOU", True, self.text_color)
+        elif turn == 2:
+            self.text = self.font.render("You: STUPID GOAT", True, self.text_color)
         self.text_rect = self.text.get_rect()
         self.text_rect.midbottom = self.screen_rect.midbottom
     def cat(self):
@@ -39,6 +44,8 @@ class Text:
         elif talk == 1:
             self.text = self.font.render("Babu: Go feed", True, self.text_color)
         elif talk == 2:
+            self.text = self.font.render("Babu: Yippie! (cheese aqurid)", True, self.text_color)
+        elif talk == 3:
             self.text = self.font.render("Babu: Yippie!", True, self.text_color)
 
         self.text_rect = self.text.get_rect()
