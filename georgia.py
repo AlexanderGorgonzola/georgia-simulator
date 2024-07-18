@@ -154,13 +154,17 @@ class georgia:
                 self.turn = "babu"
 
     def _player_hit_goat(self):
-        self.text.goat(self.goat_talk)
         if "cheese" in self.items_left:
+            self.goat_talk = 1
             if self.items_left.index("cheese") == 0:
                 self.text.item_1("NONE")
             elif self.items_left.index("cheese") == 1:
                 self.text.item_2("NONE")
-            del self.items_left[self.items_left.index("seed")]
+            del self.items_left[self.items_left.index("cheese")]
+        else:
+            if self.goat_talk == 1:
+                self.goat_talk = 2
+        self.text.goat(self.goat_talk)
         self.goat_audio.play()
     def _player_hit_dog(self):
         self.text.dog()
@@ -275,7 +279,6 @@ class georgia:
         else:
             self.text.leaving("")
         self.text.draw_leaving()
-        print(self.current_screen)
         pygame.display.flip()
 
 if __name__ == "__main__":
