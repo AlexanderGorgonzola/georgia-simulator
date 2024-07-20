@@ -7,6 +7,7 @@ class Settings:
         self.main_image = pygame.image.load("images/bg.jpg")
         self.house_image = pygame.image.load("images/house_bg.jpg")
         self.parking_image = pygame.image.load("images/parking_bg.jpg")
+        self.victory_image = pygame.image.load('images/victory.jpg')
 
         self.player_speed = 0.4
         self.goat_speed = 0.5
